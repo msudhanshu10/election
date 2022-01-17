@@ -11,6 +11,9 @@ contract Election {
     // Store Candidates
     // Fetch Candidate
     mapping(uint => Candidate) public candidates;
+
+    // Store accounts that have voted
+    mapping(address => bool) public voters;
     // Store Candidates count
     uint public candidatesCount;
 
@@ -25,6 +28,17 @@ contract Election {
     function addCandidate (string memory _name) private {
         candidatesCount ++ ;
         candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    }
+
+    function vote (uint _candidateId) public {
+        // require that they haven't voted before
+        require(!voters[msg.sender]); // if the condition in rquire is true then function will execute else not
+        // require a valid candidate
+        require(_candidateId >0 && _candidateId<= candidatesCount);
+        // record that voter has voted
+        voters[msg.sender] = true;
+
+        candidates[_candidateId].voteCount ++ ;
     }
 
 
